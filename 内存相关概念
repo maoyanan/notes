@@ -1,0 +1,36 @@
+1. lost RAM: 
+    ActivityManagerService.java
+    
+        memInfoBuilder.append("  Lost RAM: ");
+        memInfoBuilder.append(memInfo.getTotalSizeKb()
+                - totalPss - memInfo.getFreeSizeKb() - memInfo.getCachedSizeKb()
+                - memInfo.getKernelUsedSizeKb());
+        memInfoBuilder.append(" kB\n");
+        
+        实际值： Lost RAM = Total RAM - Free RAM - Used RAM 
+        
+   Sometimes it can be negative, due to issues where RAM being shared across processes is counted more than once. 
+   Drivers are mostly blamed for that. There is a memtrack HAL for them to report their memory accounting to Android,
+   but some of drivers just doesn't do it correctly.
+   
+   If you see a large "Lost RAM" value, this is probably due to a bug, it can't be reclaimed, unfortunately. You can look
+   into /d/ion (没找到) virtual directory on your device (probably a rooted device is needed), and examine reports in it,
+   looking for "orphaned" allcations.
+   
+  
+2. PrivateDirty
+  PrivateDirty is basically the amount of RAM inside the process that can not be paged to disk (it is not backed by the 
+  same data on disk), and is not shared with any other processes, Another way to look at this is the RAM that will become 
+  available to the system when that process goes away (and probably quickly subsumed into caches and other uses of it). 
+  
+3. Interesting thing to note here: PSS and Uss are slightly (or more than slightly) different than what we saw in meminfo(
+  compared to procrank). Why is that? Well procrank uses a different kernel mechanism to collect its data than meminfo does,
+  and they give slightly different results.
+  
+4. In fact, any kernel page allocation done and tracked by drivers will not be tracked by the kernel, thus counting for 
+  the lost ram.
+  
+参考文档：
+http://blog.csdn.net/shift_wwx/article/details/42490863
+https://android.stackexchange.com/questions/63854/what-is-lost-ram-in-dumpsys-meminfo
+http://www.it1352.com/107395.html
