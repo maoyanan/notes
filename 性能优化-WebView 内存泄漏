@@ -1,0 +1,10 @@
+参考链接
+http://blog.csdn.net/xygy8860/article/details/53334476?utm_source=itdadao&utm_medium=referral
+
+问题 5.1 之后，webview 有可能导致activity 内存泄漏
+
+在 webview.destory 之前 ，将 webview cong parent 中移除掉
+
+或者利用反射，将 context 中的 sComponentCallback = null；
+参考：
+https://issuetracker.google.com/issues/36918787
