@@ -1,0 +1,38 @@
+1. 尽量减少网络请求：
+  合并网络请求
+2. 避免内存泄漏
+  静态内部类，weakReference
+3. 同步，需要注意避免过度同步
+  Synchronized ， volidate， 可冲入锁，java.concurrent.*, CopyOnWrite****
+4. 注册，注销；
+5. activity 退出时取消网络请求，清空消息队列 （configChange 可能导致内存泄漏）
+6. 线程池
+7. 对象池
+8. 避免内存抖动
+9. 使用合理的数据接口 （Short，SparseArray, AtomicLong）
+10. 多线程
+  ThreadLocal，线程池，锁， 线程优先级
+11. ANR 需要注意
+  死锁
+  input 事件 5s
+  broadcast 10s
+  service 20s
+12. 电视寿命
+  GPS 、 sensor 更新频率
+  WakeLock （音视频应用，使用过程中，cpu 或者屏幕不休眠---最好设置一个超时时间）
+  禁用广播
+  Alarm 
+13. 布局优化
+  merge、include、ViewStub
+14. 布局检测工具
+  ViewHirechviewer、lint、uiAutomator
+15. 代码检测工具
+  lint （lint 自定义规则）、FindBugs、CheckStyle、StractMode
+16. 性能分析工具
+  Systrace、TraceView、StractMode、Leak Canary 、 MAT、 monitor，日志
+17. 加载大图压缩
+18. 图片格式 
+  jpg 压缩率大于 png
+  考虑 alpha 通道
+  
+ 
