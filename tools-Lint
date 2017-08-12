@@ -1,0 +1,73 @@
+Android Lint 在 API 16 提供
+主要功能
+1. 布局性能 （集成 layoutopt工具，可以解决无用布局、嵌套太多、布局太多）
+2. 未使用到的资源
+3. 不一致的数组大小
+4. 国际化问题 （硬编码）
+5. 图标问题 （重复的图标，错误的大小）
+6. 可用性问题 （如不指定的文本字段的输入型）
+7. manifest 文件的错误
+
+
+Lint 工具位置 sdk/tools/lint (sh 脚本)
+使用
+lint --help
+
+lint --list
+lint --show 获取索要扫面问题的详细列表
+
+lint --html /xxxx/xxx.html /app/xxxx
+
+lint --disable <list> 不检查指定 <list> 中默认要检查的 id 或 category
+lint --enable <list> 检查默认忽略的 id 或 category
+lint --check <list> 只检查 <list> 中的 id 或 category
+（上面三个的设置，只能针对一次 lint 检查）
+
+lint --config <xml filename> 指定默认的全局配置文件
+（对于某条 issues ，1 先用 lint.xml 的规则； 然后，2 使用 config 指定的规则；最后，使用系统的默认规则）
+
+返回值 (可用于 CI 脚本)
+0 success
+1 lint errors detected
+2 lint usage
+3 cannot clobber existing file
+4 lint help
+5 invalid command-line argument
+
+Valid issue categories:
+  Correctness （DuplicatedIds,NewApi,IncosistentArrays,Registered,Deprecated,PxUsage）
+  Correctness:Message (MissingTranslation,ExtraTranslation)
+  Security (SetJavaScriptEnabled, ExportedContentProvider/ExportedReceiver/ExportedService/ExportedActivity
+            /ContentProvider/Receiver/Service/Activity 的 exported 为 true时，设置一个 Permission， 让使用者获取 Permission 才能使用
+            , HandcodeDebugMode 不要在 manifest 中设置 android:debuggable, 设置它，编译的任何版本都要采用指定的 debug 模式。不设置，
+            编译 Eng 版本为 debug 模式；编译 User版本采用 release 模式）
+  Performance (DrawAllocation, ObsoleteLayoutParam, UseCompoundDrawables, UseSparseArrays, DisableBaselineAligment, FloatMath
+               使用 FloatMath 代替 Math,NestedWeights 避免嵌套 weight，那将拖累执行效率, unusedResources/ UnusedIds, Overdraw 如果为
+               rootView 指定了一个背景 drawable, 会先用 Theme 的背景绘制一遍，然后才用指定的 背景，这样就是 所谓的 overdraw 可以设置 theme 的
+               background = null 来避免，UselessLeaf/UselessParent)
+  usability:Typography (TypographyDashes, TypographyEllipsis, TypographyOther)
+  usability:Icons (IconNoDpi, GifUsage)
+  usability (BackButton, ButtonCase)
+  Accessibility (ContentDescription)
+  Internationalization (hardcodeText, EnforceUTF-8)
+  Bi-directional Text
+  
+Severity 标识 issue 的危害性
+Fatal / Error / Warning / Information / Ignore 
+
+lint.xml 
+关键是 issue （用 id 指定）的 severity ， 并且可以指定该 issue 作用于指定的文件还是当前项目。
+
+在 eclipse 中的处理
+@SuppressLint'<IssueId>' 用来忽略<IssueId>。 适用范围在所调用的方法的方法处或这个类中。
+@TargetApi(<api>) 用来指示 API 用给定的 <api>, 而不是项目中指定的。使用方位在所调用的方法处或这个类中。
+二者的区别：
+@SuppressLint("NewApi") 屏蔽一切新 api 中才能使用的方法报的 android lint 错误
+@TargetApi() 只屏蔽某一新 api 中才能使用的方法报的 android lint 错误
+
+参考
+http://blog.csdn.net/thl789/article/details/8037473
+
+  
+  
+
