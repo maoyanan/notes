@@ -18,7 +18,8 @@
 5. View 的自定义
 
 6. measure (view 中为 final 方法)
-  MeasureSpec 三种模式：UNSPECIFIED（wrap_content）、EXACTLY(具体数据)、AT_MOST（wrap_content）
+  MeasureSpec 三种模式：UNSPECIFIED（默认模式）、EXACTLY(match_parent 父控件的剩余空间，所以顺序很重要,精确值)、AT_MOST（wrap_content）
+  MeasureSpec.getMode(measureSpec) 将结合 MeasureSpec.getSize(measureSpec) 使用，确定 空间的大小，传递给 setMeasureDimension(int,int);
   该方法会调用 onMeasure(int,int) , onMeasure(int,int) 中需要调用 setMeasuredDimension (int,int) 否则会报 IllegalStateException 
   
   
