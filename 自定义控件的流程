@@ -14,18 +14,25 @@
   
 
 4. ViewGroup 的自定义
+  measureChildren(int widthMeasureSpec, int heightMeasureSpec) { for() }
+  measureChild(View child, int parentWidthMeasureSpec, int parentHeightMeasureSpec) -> 调用 child.measure()
+  measureChildWithMargin(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) -> child.measure()
+  调用 getChildMeasureSpec() -> 返回值，就是 child.measure() 的参数
 
 5. View 的自定义
 
-6. measure (view 中为 final 方法)
+6. measure (view 中为 final 方法) 由 viewGroup 的 measureChild(), measureChildWithMargin() 调用
   MeasureSpec 三种模式：UNSPECIFIED（默认模式）、EXACTLY(match_parent 父控件的剩余空间，所以顺序很重要,精确值)、AT_MOST（wrap_content）
   MeasureSpec.getMode(measureSpec) 将结合 MeasureSpec.getSize(measureSpec) 使用，确定 空间的大小，传递给 setMeasureDimension(int,int);
   该方法会调用 onMeasure(int,int) , onMeasure(int,int) 中需要调用 setMeasuredDimension (int,int) 否则会报 IllegalStateException 
   
+  view 在创建时不需要知道 需要占用的大小，只有放入 ViewGroup 中时才需要设置 view 的大小。所以实在 viewGroup 的 onMeasure() 中调用的child 的 measure()
+  子控件根据父控件提供的约束条件和，参数，返回实际需要的大小
+  
   
 7. layout
   包含两个方法 setFrame(l,t,r,b), onLayout()
-  onLayout() 空值子 View 的布局和大小
+  onLayout() 摆放所有的子控件
 8. draw
   onDraw(Canvas)
   需要注意
@@ -41,7 +48,7 @@
   public View (Context context);
   public View (Context context, @Nullable AttributeSet attr);
   public View (Context context, @Nullable AttributeSet attr, int defStyleAttr);
-  public View (Context context, @Nullable AttributeSet attr, int defStyleAttr, int defStyleRes);
+  public View (Context context, @Nullable AttributeSet attr, int defStyleAttr, int defStyleRes);  // API 21 才出现
   
   
 10. 自定义控件中的关键方法
@@ -58,3 +65,10 @@
   onAttachedToWindow() 当把该组件放入到某个窗口时
   onDetachedFromWindow() 当把该组件从某个窗口上分离时触发的方法
   onWindowVisibilityChanged(int) 当包含该组件的窗口的可见性发生改变时触发的方法
+  
+11. LayoutParam ViewGroup 的静态内部类，MarginLayoutParam extends ViewGroup.LayoutParams {}
+
+
+参考：
+http://blog.csdn.net/xmxkf/article/details/51490283
+
