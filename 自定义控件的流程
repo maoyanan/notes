@@ -1,0 +1,59 @@
+1. 需求分析
+  a.区分是 View 还是 ViewGroup
+  b.是否可以直接 extends 现有的 view
+  c.如果是 ViewGroup 的话，是否是多个 View 的组合形式，能否用 layout.xml 实现
+  d.在 xml 文件中使用 （使用哪个构造方法）
+  e.需不需要自定义属性
+2. 自定义属性
+  两种方式
+  a.创建 attr.xml ，定义 styleable 字段
+  b.直接在 xml 中添加属性，然后构造方法内，使用 attr.getAttributeResourceValue(null,"属性名字",0)
+  
+3. 使用 layout.xml
+  onFinishInflate() 当应用从 XML 加载组件并用它构建界面之后调用
+  
+
+4. ViewGroup 的自定义
+
+5. View 的自定义
+
+6. measure (view 中为 final 方法)
+  MeasureSpec 三种模式：UNSPECIFIED（wrap_content）、EXACTLY(具体数据)、AT_MOST（wrap_content）
+  该方法会调用 onMeasure(int,int) , onMeasure(int,int) 中需要调用 setMeasuredDimension (int,int) 否则会报 IllegalStateException 
+  
+  
+7. layout
+  包含两个方法 setFrame(l,t,r,b), onLayout()
+  onLayout() 空值子 View 的布局和大小
+8. draw
+  onDraw(Canvas)
+  需要注意
+  a. 不要大量 new 变量，有可能会造成内存抖动
+  b. canvas.clip
+  c. onDraw 会被执行多次，不能做耗时操作
+  d. 避免 OverDraw 
+9. touch 事件的处理
+  onTouchEvent()
+  
+10. view 的构造方法：
+  View(); Non-public constructor for use in tesing
+  public View (Context context);
+  public View (Context context, @Nullable AttributeSet attr);
+  public View (Context context, @Nullable AttributeSet attr, int defStyleAttr);
+  public View (Context context, @Nullable AttributeSet attr, int defStyleAttr, int defStyleRes);
+  
+  
+10. 自定义控件中的关键方法
+  onFinishInflate() 当应用从 XML 加载组件并用它构建界面之后调用的方法
+  onMeasure() 检测 View 组件及其子组件的大小
+  onLayout() 当前组件需要分配自子组件的位置、大小时
+  onSizeChange() 当组件的大小被改变时
+  onDraw() 当组件将要绘制它的内容时
+  onKeyDown() 当按下某个键盘时
+  onKeyUp() 当松开某个键盘时
+  onTrackballEvent 当发生轨迹球事件时
+  onTouchEvent 当发生触屏事件时
+  onWindowFocusChanged(boolean) 当该组件得到、失去焦点时
+  onAttachedToWindow() 当把该组件放入到某个窗口时
+  onDetachedFromWindow() 当把该组件从某个窗口上分离时触发的方法
+  onWindowVisibilityChanged(int) 当包含该组件的窗口的可见性发生改变时触发的方法
