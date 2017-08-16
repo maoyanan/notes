@@ -26,13 +26,21 @@
   MeasureSpec.getMode(measureSpec) 将结合 MeasureSpec.getSize(measureSpec) 使用，确定 空间的大小，传递给 setMeasureDimension(int,int);
   该方法会调用 onMeasure(int,int) , onMeasure(int,int) 中需要调用 setMeasuredDimension (int,int) 否则会报 IllegalStateException 
   
-  view 在创建时不需要知道 需要占用的大小，只有放入 ViewGroup 中时才需要设置 view 的大小。所以实在 viewGroup 的 onMeasure() 中调用的child 的 measure()
+  MeasureSpec 可以将一个 int 值区分成两部分， 高2位为 MeasureSpec.mode, 低30位为 MeasureSpec.size 数字
+  
+  view 在创建时不需要知道 需要占用的大小，只有放入 ViewGroup 中时才需要设置 view 的大小。所以实在 viewGroup 的 onMeasure() 中调用的child 
+  的 measure()
   子控件根据父控件提供的约束条件和，参数，返回实际需要的大小
+  onMeasure() 方法执行后，就可以通过 child.getMeasuredHeight() 来获取 child 的高，宽同理。
   
   
 7. layout
   包含两个方法 setFrame(l,t,r,b), onLayout()
   onLayout() 摆放所有的子控件
+  
+  viewGroup 的 final layout(), abstract onLayout(); view 的 public layout(), protected onLayout()
+  
+  
 8. draw
   onDraw(Canvas)
   需要注意
@@ -67,8 +75,33 @@
   onWindowVisibilityChanged(int) 当包含该组件的窗口的可见性发生改变时触发的方法
   
 11. LayoutParam ViewGroup 的静态内部类，MarginLayoutParam extends ViewGroup.LayoutParams {}
+12. View 绘制的流程
+  起点： ViewRootImpl 中的 performTraversals() { ... performMeasure ... performLayout ... performDraw}
+  
+13. getWidth() 与 getMeasuredWidth 区别
+  getWidth() 是在 onLayout() 方法调用之后才可用的，源码位 mRight - mLeft
+  getMeasureWidth() 在 onMeasure() 中 通过 setMeasuredDimension() 赋值
+  在某些自定义的 ViewGroup 中，因为子 View 的个数、位置和大小都是固定的，这时可以忽略整个 measure 过程，
+  只在 layout 函数中传入 4 个参数来安排每个子 View 的具体位置
+14. mLeft,mTop,mRight,mBottom, 这些值都是相对于父 View 来说的
+15. 凡是 layout_xxxx 的布局属性基本上都是针对包含子 View 的 ViewGroup 的，当对一个没有父容器的 View 设置相关 layout_xxxx 属性是没有任何意义的
+16. view.draw()
+  a. Draw the background
+  b. if necessary, save the canvas' layers to prepare for fading
+  c. draw the view's content
+  d. draw children
+  e. if necessary, draw the fadding edges and restore layers
+  f. draw decorations (scrollbars for instance)
+  
+  b & e can be skipped
+  
+  view 中 dispatchDraw() 实现为{} ，只有 viewGroup 的 dispatchDraw() 有内容，并且是遍历所有的 子view ，调用 drawChild().
+  
+  ViewGroup.drawChild 绘制顺序和子 View 被添加的顺序一致，但可以通过重载 ViewGroup.getChildDrawingOrder() 提供不同的顺序。
+  
 
 
 参考：
 http://blog.csdn.net/xmxkf/article/details/51490283
+http://blog.csdn.net/yanbober/article/details/46128379
 
