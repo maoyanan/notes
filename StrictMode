@@ -62,9 +62,13 @@
     ServiceConnection 注册类对象是否被正确释放
     setClassInstanceLimit()，设置某个类的同时处于内存中的实例上限，可以协助检查内存泄露
 
-11. StrictMode 给出的耗时相对实际情况偏高，并不是真正的耗时数据。
+11. StrictMode 给出的耗时 ~duration (Wall time 总共耗费的系统时间差)相对实际情况偏高，并不是真正的耗时数据。
 
 注意：
 1. 在线上环境不建议开启严格模式
 2. 严格模式无法监控 JNI 中磁盘 IO 和 网络请求
 3. 应用中并非需要解决全部的违例情况，比如有些 IO 操作必须在主线程中进行
+4. ThreadPolicy 主要是主线程耗时问题分析
+   Vm Pollicy 主要是内存方面分析
+5. 自定义线程中，想要有严苛模式输出，需要在该线程中设置 strictMode.setPolicy()
+5. detectActivityLeaks 主线程中调用，会有 ~duration ，其他线程中可用，但是没有 duration 输出
