@@ -1,0 +1,40 @@
+1.StrictMode detectActivityLeaks 
+  日志如下：
+    class com.example.yanan.demo.LeakActivity; instances=2; limit=1
+          android.os.StrictMode$InstanceCountViolation: class com.example.yanan.demo.LeakActivity; instances=2; limit=1
+          at android.os.StrictMode.setClassInstanceLimit(StrictMode.java:1)
+  操作结果，当 LeakActivity 的第二个实例发生泄漏时，StrictMode 才会报 E 级别的日志。
+  原因：
+      Integer expected = sExpectedActivityInstanceCount.get(klass);
+      int newExpected = (expected == null || expected == 0) ? 0 : expected - 1;
+      if (newExpected == 0) {
+          sExpectedActivityInstanceCount.remove(klass);
+      } else {
+          sExpectedActivityInstanceCount.put(klass, newExpected);
+      }
+
+      // Note: adding 1 here to give some breathing room during
+      // orientation changes.  (shouldn't be necessary, though?)
+      limit = newExpected + 1;
+      
+       // Quick check.
+        int actual = InstanceTracker.getInstanceCount(klass);
+        if (actual <= limit) {
+            return;
+        }
+
+        // Do a GC and explicit count to double-check.
+        // This is the work that we are trying to avoid by tracking the object instances
+        // explicity.  Running an explicit GC can be expensive (80ms) and so can walking
+        // the heap to count instance (30ms).  This extra work can make the system feel
+        // noticeably less responsive during orientation changes when activities are
+        // being restarted.  Granted, it is only a problem when StrictMode is enabled
+        // but it is annoying.
+
+        System.gc();
+        System.runFinalization();
+        System.gc();
+      
+      当 configChange 时，体统默认销毁当前 activity 新建一个新的 Activity，但是可以通过方法控制新 activity 实例的生成。
+      所以 实例个数从 2 开始检测。
+2.
