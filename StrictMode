@@ -1,5 +1,5 @@
-1.StrictMode detectActivityLeaks 
-  日志如下：
+1.StrictMode detectActivityLeaks  
+  日志如下：（E 级别）
     class com.example.yanan.demo.LeakActivity; instances=2; limit=1
           android.os.StrictMode$InstanceCountViolation: class com.example.yanan.demo.LeakActivity; instances=2; limit=1
           at android.os.StrictMode.setClassInstanceLimit(StrictMode.java:1)
@@ -37,6 +37,29 @@
       
       当 configChange 时，体统默认销毁当前 activity 新建一个新的 Activity，但是可以通过方法控制新 activity 实例的生成。
       所以 实例个数从 2 开始检测。
-2. 主线程写数据 violation
+2. 主线程写数据 violation (D 级别)
     StrictMode policy violation; ~duration=3 ms: android.os.StrictMode$StrictModeDiskReadViolation: policy=65543 violation=2
-3. 
+3. 在设置中启用StrictMode
+   我们也可以在Android设备的设置（Settings）中启用StrictMode：
+   Settings（设置） -> Developer options（开发者选项），然后开启它。开启之后，一旦应用在主线程中执行耗时操作，屏幕就会闪烁。
+4. detectCustomSlowCalls (ThreadPolicy) 自定义StrictMode 指标 StrictMode.noteSlowCall("xxxxx")
+5. detectNetwork() 用于检查UI线程中是否有网络请求操作
+6. detectDiskReads() 和 detectDiskWrites() 是磁盘读写检查
+7.  penaltyDeath()，当触发违规条件时，直接Crash掉当前应用程序。
+    penaltyDeathOnNetwork()，当触发网络违规时，Crash掉当前应用程序。
+    penaltyDialog()，触发违规时，显示对违规信息对话框。
+    penaltyFlashScreen()，会造成屏幕闪烁，不过一般的设备可能没有这个功能。
+    penaltyDropBox()，将违规信息记录到 dropbox 系统日志目录中（/data/system/dropbox），你可以通过如下命令进行插件：
+        adb shell dumpsys dropbox dataappstrictmode  --print
+    permitCustomSlowCalls()、permitDiskReads ()、permitDiskWrites()、permitNetwork： 如果你想关闭某一项检测，可以使用对应的permit*方法。
+8. detectActivityLeaks() 用户检查 Activity 的内存泄露情况
+9. detectLeakedClosableObjects()用于资源没有正确关闭时提醒
+    E/StrictMode: A resource was acquired at attached stack trace but never released. See java.io.Closeable for information on avoiding resource leaks.
+10. detectLeakedSqlLiteObjects() 和 
+    detectLeakedClosableObjects()的用法类似，只不过是用来检查 SQLiteCursor 或者 其他 SQLite 
+    对象是否被正确关闭
+    detectLeakedRegistrationObjects() 用来检查 BroadcastReceiver 或者 
+    ServiceConnection 注册类对象是否被正确释放
+    setClassInstanceLimit()，设置某个类的同时处于内存中的实例上限，可以协助检查内存泄露
+
+
