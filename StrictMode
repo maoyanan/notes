@@ -37,4 +37,6 @@
       
       当 configChange 时，体统默认销毁当前 activity 新建一个新的 Activity，但是可以通过方法控制新 activity 实例的生成。
       所以 实例个数从 2 开始检测。
-2.
+2. 主线程写数据 violation
+    StrictMode policy violation; ~duration=3 ms: android.os.StrictMode$StrictModeDiskReadViolation: policy=65543 violation=2
+3. 
