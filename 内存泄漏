@@ -1,0 +1,30 @@
+原因：
+    1. 静态变量或常量
+      static Context；单例
+      WeakRefrence
+    2. 内部类，匿名内部类
+      handler, runnable, timeTask ，AsyncTask
+      静态内部类
+    3. 循环属性动画
+      虽然页面看不见，但是还在绘制
+      onStop(animator.stop())
+    4. webview 
+      反注册回调函数时机问题
+      parent.remove(webview);
+      webview.stop();
+    5. 反注册监听器 
+      一些 scensor 等
+    6. 调用 native 处理的数据
+      Bitmap.recycle(); cursor.close; inputstream.close()
+      
+发现问题：
+    1. StrictMode VM Poicy detectActivityLeaks() 
+        日志、dialog 或者强行退出
+        单个 activity 设置 strictMode 或者整个应用设置 StrictMode
+        不足之处：limit 显示，默认是1，所以只有第二次发生内存泄漏时，才会有日志打出
+    2. LeakCanary
+        使用 通知 + Activity 的形式通知问题
+        不足：存在误报的可能。
+    3. MAT
+        使用， studio 生成 .hprof 文件，转换成 MAT 可识别的标准 hprof 文件
+        个别文件中，未能识别出问题
