@@ -1,0 +1,45 @@
+1. configChange 时默认 activity 销毁重建
+2. 解决办法
+  1> <activity android:name=".MainActivity"
+        android:configChanges="orientation|screenSize|keyboardHidden">
+        ...
+     </activity>
+     
+     这样会执行
+        @Override
+        public void onConfigurationChanged(Configuration newConfig) {    
+          super.onConfigurationChanged(newConfig);
+          // 检测配置改动后执行相关操作
+        }
+   2> 禁止旋转屏幕
+      <activity android:name=".MyActivity"
+          android:screenOrientation="portrait"
+          android:label="@string/app_name">
+   3> 旋转后恢复现场
+      既然Activity会被销毁，那么我们就可以使用前文介绍过的“持久化/恢复现场”方法来解决。即在onPause()里将用户当前已经输入的内容保存到数据库或Preference，
+      在onCreate()方法里读取并填充到表单中，这也是官方推荐的方法。
+
+       需要补充一点，如果Activity重建需要耗费大量资源或需要访问网络导致时间很长，可以实现onRetainNonConfigurationInstance()
+       方法将所需数据先保存到一个对象里，像下面这样：
+
+        @Override
+        public Object onRetainNonConfigurationInstance() {
+            final MyDataObject data = collectMyLoadedData();
+            return data;
+        }
+
+        重建时，在onCreate()方法里通过getLastNonConfigurationInstance()方法获得之前保存的数据，如下所示：
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.main);
+
+            final MyDataObject data = (MyDataObject) getLastNonConfigurationInstance();
+            if (data == null) {//表示不是由于Configuration改变触发的onCreate()
+                data = loadMyData();
+            }
+   
+        }
+   4> AndroidManifest.xml 中设置 
+      android:screenOrientation="landscape" or android:screenOrientation="portrait"
