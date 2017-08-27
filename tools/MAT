@@ -1,0 +1,12 @@
+android hprof 转换成 java 标准的 hprof 文件
+方法一
+
+  Overview -> Actions -> Dominator Tree -> 顶部输入 Regex  会列出相应的数据
+  
+方法二
+  
+  QQL -> select * from instanceof android.app.Activity
+  ! (执行)
+
+
+两种方法效果一致
