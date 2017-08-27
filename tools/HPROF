@@ -1,0 +1,24 @@
+monitor -> dump java heap 
+Captures -> onpen the file
+右上角 Analyzer Tasks (Detect Leaked Activities / Find Duplicate Strings) -> run
+Analysis Result 
+
+根据实例，索引上层引用。 树形图标， 
+
+App heap : 当前 app 使用的堆
+Image heap : 当前 app 在硬盘上的内存映射
+Zygote heap : zygote 复制时继承来的库、运行时类和常量的数据集。 zygote 空间设备启动时创建，从不分配这里的空间。
+
+ClassName : 类名
+TotalCount : 该类的实例总数
+HeapCount : 所选择的堆中类的实例的数量
+Sizeof : 单个实例所占用的空间大小 （如果没给实例所占空间大小不一样则显示 0 ）
+ShallowSize : 堆里所有实例大小总和 （heap count * sizeof）
+RetainedSize : 该类所有实例所支配的内存大小
+
+Instance 具体的实例
+depth : GC根节点到所选实例的最短路径的深度
+ShallowSize : 所选实例的大小
+DominatingSize : 所选实例所支配的内存大小
+
+Reference Tree : 所选实例的引用，以及指向该引用的引用
