@@ -1,6 +1,45 @@
 源码地址：
   https://github.com/square/leakcanary
 
+ 1. LeakCanary.install(this)
+    注册LeakAnalyzerService.class
+    去掉系统存在的问题 AndroidExcludedRefs 中定义
+    application.registerActivityLifecycleCallbacks(xxx)
+    当 activity 执行 onDestory() 执行 refWatch.watch(this)
+ 2. refWatch.watch(this)
+    生成 key ， uuid 生成
+    生成一个 keyWeakReference 对象
+    ensureGoneAsync(watchStartNanoTime, reference)
+ 3. ensureGoneAsync (默认延迟时间 5s -- AndroidRefWatcherBuilder)
+    放入一个 AndroidWatchExecutor 中 执行 Retrable
+    若为主线程提交，waitForIdle 执行，否则 postWaitForIdle 最终在 mainThread addIdleHandler 
+    queueIdle 中 执行 postToBackgroundWithDelay()
+    postToBackgroundWithDelay 中 backgroundHandler.postDelay()
+    然后，postDelay 中执行 retrable.run() 判断执行结果是否 需要 retry， 若需要重新结算 delay 时间，重新判断  
+ 4. retrable.run()
+    执行 refwatcher.ensureGone()
+    removeWeaklyReachableReference()
+    引用为 null retrable 返回 Result.GONE
+    否则 gcTrigger.runGc()
+    removeWeaklyReachableReference() --- 第二次判断
+    引用为 null retrable 返回 Result.GONE
+    否则，heapDumper.dumpHeap() --- 使用 leakDirectoryProvider
+    若 heapDumpFile 为 null， retrable 返回 Result.RETRY
+    不为 null 执行 heapdumpListener.analyze()
+ 5. heapdumpListener.analyze()
+    使用 square 的 HAHA 分析 Android heap dumps
+    HeapAnalyzerService.runAnalysis()
+    开启 service HeapAnalyzerService (IntentService)
+    onHandleIntent()
+    AnalysisResult result = heapAnalyzer.checkForLeak() ---- heapAnalyzer 使用 haha.jar 来分析 heapDump， 计算出 GC root的最短路径
+    DisplayLeakService.onHeapAnalyzed()
+    是否保存信息
+      是 rename , 保存文件
+    生成 pendingIntent 
+    LeakCanaryInternals.showNotification()
+ 6. 点击 notification DisplayLeakActivity 显示结果
+    
+    
 
 【原理】
 LeakCanary通过square自家的HAHA来自动化分析Android heap dumps，内部基于MAT, vshor/mat，AndroMAT来做Java和Android特定的heap分析，
