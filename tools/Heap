@@ -1,0 +1,17 @@
+DDMS -> update heap
+点击 Cause GC
+此时，在 heap 视图中就会看到当前选中的进程的内存使用情况
+  点击 Cause GC ，向虚拟机请求一次 gc 操作
+  当内存信息第一次显示后，无须不断点击 Cause GC，heap 视图界面会定时刷新，在对应用不断操作中会看到内存变化
+判断内存泄漏可能性
+  heap 视图中有一个 Type 叫做 dataobject（数据对象-程序中大量存在的类类型对象）
+  在 data object 一行中有一列是 "Total Size", 其值就是当前进程中所有 java 对象的内存总量，一般情况下，这个值得大小决定了是否会发生内存泄漏。
+  可以这样判断：
+      不断操作当前应用，同时注意观察 data object 的 Total Size 值
+      正常情况下 Total Size 值会稳定在一个有限的范围内
+      反之，如果代码中存在没有释放的对象引用，则 data object 的 Total Size 值在每次 GC 后不会明显回落，随着操作次数的增多 Total Size 的值会越来越大。
+  
+参数详解
+   HeapSize : 系统分配给当前应用程序的总内存;对应读内存的代码
+  
+  
