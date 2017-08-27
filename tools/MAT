@@ -8,5 +8,7 @@ android hprof 转换成 java 标准的 hprof 文件
   QQL -> select * from instanceof android.app.Activity
   ! (执行)
 
+ 最后
+  右键单击，path to gcRoot
 
 两种方法效果一致
