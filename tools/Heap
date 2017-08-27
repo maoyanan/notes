@@ -10,8 +10,12 @@ DDMS -> update heap
       不断操作当前应用，同时注意观察 data object 的 Total Size 值
       正常情况下 Total Size 值会稳定在一个有限的范围内
       反之，如果代码中存在没有释放的对象引用，则 data object 的 Total Size 值在每次 GC 后不会明显回落，随着操作次数的增多 Total Size 的值会越来越大。
-  
+  已 system_process 为例，data object 的 totalSize 正常情况下会稳定在 2.2 ~ 2.8 之间，而当其值超过 3.55 后进程就会被 kill.
 参数详解
-   HeapSize : 系统分配给当前应用程序的总内存;对应读内存的代码
+   HeapSize : 系统分配给当前应用程序的总内存;对应读内存的代码：Runtime.getRuntime().totalMemory()
+   Allocated : 应用程序当前占用的实际内存
+   Free : 分配的内存中空闲的内存；对应读内存的代码: Runtime.getRuntime().freeMemory()
+    heapSize = Allocated + Free
+   
   
   
