@@ -3,9 +3,11 @@
 
 
 【原理】
-LeakCanary通过square自家的HAHA来自动化分析Android heap dumps，内部基于MAT, vshor/mat，AndroMAT来做Java和Android特定的heap分析，亮点则是其将需要人工分析的事情做到了完全自动化，并给出能帮助快速定位修复内存泄露的信息。
+LeakCanary通过square自家的HAHA来自动化分析Android heap dumps，内部基于MAT, vshor/mat，AndroMAT来做Java和Android特定的heap分析，
+亮点则是其将需要人工分析的事情做到了完全自动化，并给出能帮助快速定位修复内存泄露的信息。
 
-在Application中使用LeakCanary.install(this)后，LeakCanary就会自动install一个ActivityRefWatcher来自动化检测activity是否在onDestroy后有泄露。具体步骤大致是
+在Application中使用LeakCanary.install(this)后，LeakCanary就会自动install一个ActivityRefWatcher来自动化检测activity
+是否在onDestroy后有泄露。具体步骤大致是
 1. 自动把activity加入到KeyedWeakReference
 2. 在background线程中，检查onDestroy后reference是否被清除，且没有触发gc
 3. 如果reference没有被清除，则dump heap到一个hprof文件并保存到app文件系统中
@@ -13,3 +15,6 @@ LeakCanary通过square自家的HAHA来自动化分析Android heap dumps，内部
 5. HeapAnalyzer在heap dump中根据reference key找到KeyedWeakReference。
 6. HeapAnalyzer计算出到GC Roots的最短强引用路径来判断是否存在泄露，然后build出造成这个泄露的引用链。
 7. 结果被传回来app进程的DisplayLeakService，并展示一个泄露的notification。
+
+参考链接：
+   http://blog.csdn.net/cloud_huan/article/details/53081120
