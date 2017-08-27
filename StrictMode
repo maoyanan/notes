@@ -62,7 +62,7 @@
     ServiceConnection 注册类对象是否被正确释放
     setClassInstanceLimit()，设置某个类的同时处于内存中的实例上限，可以协助检查内存泄露
 
-11. StrictMode 给出的耗时 ~duration (Wall time 总共耗费的系统时间差)相对实际情况偏高，并不是真正的耗时数据。
+11. StrictMode 给出的耗时 ~duration (是否存在改参数与 thread 中 是否有 looper 对象有关，Wall time 总共耗费的系统时间差)相对实际情况偏高，并不是真正的耗时数据。
 
 注意：
 1. 在线上环境不建议开启严格模式
