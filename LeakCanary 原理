@@ -1,3 +1,7 @@
+源码地址：
+  https://github.com/square/leakcanary
+
+
 【原理】
 LeakCanary通过square自家的HAHA来自动化分析Android heap dumps，内部基于MAT, vshor/mat，AndroMAT来做Java和Android特定的heap分析，亮点则是其将需要人工分析的事情做到了完全自动化，并给出能帮助快速定位修复内存泄露的信息。
 
