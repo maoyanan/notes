@@ -1,2 +1,21 @@
 参考链接：
+  mmap 源码
   http://blog.csdn.net/luoyhang003/article/details/50256051
+  
+  android 内存分类描述
+  http://www.cnblogs.com/wytiger/p/5690039.html
+    Java Heap (Dalvik Heap) 该区域由 Dalvik 虚拟机管理， 通过 Java 中的 new 关键字来申请一块新内存，由 GC 直接管理，能够自动回收。
+    这块内存大小受系统限制，当内存超过 APP 最大可用内存时 OOM
+    Native Heap 由 c++ 中申请，不受限于 APP 最大可用内存限制，只受限于设备的物理可用内存限制。缺点是没有自动回收机制，需要 c++ 主动释放
+    Ashmem (Android 匿名共享内存)，类似于 Native 内存区，但受限于 Android系统底层管理，当Android系统内存不足时，会回收该区中 unpin 的对象块。
+    如果不希望被回收，可以通过 pin 来保护。
+      Ashmem 一般在应用层是无法直接访问的，除了几个特例外，其一就是 decode bitmap。
+      Android 5.0 之前，可以通过 BitmapFactory.Options.inPurgeable = true 来创建一个 Purgeable Bitmap。但是 unpined bitmap 之后又被使用，系统
+      会重新 decode，但是该 decode 发生在 UI 线程，很可能造成掉帧，因此被 Google 废弃，转为鼓励使用 inBitmap 来告知 bitmap解码器去尝试使用已经
+      存在的内存区域，新解码的 bitmap 会尝试去使用之前那张 bitmap 在 heap 中所占据的 pixel data 内存区域，而不是重新申请一块新区域。
+      inBitmap 限制：
+        SDK 11 - 18 重用 bitmap 大小必须一致
+        SDK > 19, 新申请的 bitmap 大小必须小于或等于已经复制过的 bitmap 大小。
+        新申请的 bitmap 与旧的 bitmap 必须有相同的解码格式，例如 8888，565.
+        可以创建一个包含多种典型可重用 bitmap 的对象池，这样后续的 bitmap 的创建都能找到合适的 模板 去进行重用。
+
