@@ -1,0 +1,9 @@
+package android.support.v4.content；
+
+原因： 一般 sendBroadcast 会经过两次 bindle ，首先 sendBroadcast 会把广播信息告诉 Systemserver (第一次 Binder call),然后调用 APP 进程的 
+      receiver 的 onReceiver()(第二次 Binder call) 
+实现： handler 
+注意：
+  1. LocalBroadcast 是 APP 内部维护的一套广播机制，有很高的安全性和高效性。所以如果有APP内部发送、接收广播的需要应该使用 LocalBroadcast
+  2. Receiver 只允许动态注册，不允许在 Manifest 中注册。
+  3. LocalBroadcast 所发送的广播的action，只能注册到 LocalBroadcastManager 中 BroadcastReceiver 产生互动。
