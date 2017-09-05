@@ -1,0 +1,10 @@
+http://blog.csdn.net/tabactivity/article/details/52945343
+
+ANR 属于应用范畴，不同于 SNR （System Not Responding），ANR 由消息处理机制保证, SNR 反映的问题是系统进程（system_server）失去响应能力，SNR 由WatchDog 机制保证。
+
+ANR 机制主体实现在系统层，所以与 ANR 相关的消息，都会经过系统进程 （system_server）调度，然后派发到应用进程完成对消息的实际处理，
+同时，系统进程设计了不同的超时限制来跟踪消息的处理。一旦应用程序处理消息不当，超时限制就起作用了，它手机一些系统状态，譬如 CPU/IO 
+使用情况、进程函数调用栈，并报告用户进程无响应（ANR对话框）。
+
+ANR问题本质
+
