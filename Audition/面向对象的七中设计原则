@@ -1,1 +1,18 @@
 
+http://www.cnblogs.com/WuXuanKun/p/5386495.html
+
+面向对象的七中设计原则
+1. 单一职责：SRP，Single Responsibility Principle
+    一个类只负责一个领域的相应职责
+2. 开放封闭：OCP，Open-Closed Principle
+    软件实力应该对扩展开放，对修改关闭
+3. 里氏代换：LRP，Liskov Substitution Principle
+    所有应用基类的对象都能够透明的使用其子类的对象
+4. 接口隔离：ISP，Interface Segregation Principle
+    使用多个专门的接口，而不是使用单一总接口
+5. 依赖倒转：IOC，Dependence Inversion Principle
+    抽象不应该依赖于细节，细节依赖于抽象
+6. 合成复用：CRP，Composite Reuse Principle
+    尽量使用对象组合，而不是继承来达到复合目的
+7. 迪米特法则：LoD，Law of Demeter
+    一个软件实体应当尽可能少的与其他实体发生相互作用
