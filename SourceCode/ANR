@@ -6,5 +6,53 @@ ANR 机制主体实现在系统层，所以与 ANR 相关的消息，都会经�
 同时，系统进程设计了不同的超时限制来跟踪消息的处理。一旦应用程序处理消息不当，超时限制就起作用了，它手机一些系统状态，譬如 CPU/IO 
 使用情况、进程函数调用栈，并报告用户进程无响应（ANR对话框）。
 
-ANR问题本质
+ANR问题本质是一个性能问题，是对应用程序主线程的限制，要求主线程在限定的时间内处理完一些最常见的操作（如密集 CPU 运算、大量 IO、
+复杂界面布局等），都会降低应用程序的响应能力。
+
+部分 ANR 问题很难分析，有时候是由于系统底层的一些影响，导致消息调度失败，出现问题的场景又难以复现。这类 ANR 问题往往需要花费大量时间去
+了解系统的一些行为，超出了 ANR 机制本身的范畴。
+
+一、ANR的检测机制
+  · Service ANR ，前台进程中 Service 生命周期不能超过20s，后台不能超过 200s。在启动 Service 时，抛出定时消息 SERVICE_TIMEOUT_MSG
+    或者 SERVICE_BACKGROUND_TIMEOUT_MAG, 如果定时消息响应了，则说明发生了 ANR。
+  · Broadcast ANR，前台的“串行广播消息”必须在 10s 内处理完毕，后台“串行广播消息”必须在 60s 处理完毕，每派发串行消息到一个接收器，都会抛
+    出一个定时消息 BROADCAST_TIMEOUT_MSG ，则定时消息响应，则判断是否广播消息处理超时，超时就说明发生了 ANR。
+  · Input ANR，输入事件必须在 5s 内处理完毕。在派发一个输入事件时，会判断当前输入时间是否需要等待，如果需要等待，则判断是否等待已经超时，
+    超时就寿命发生了 ANR
+    
+  ANR 监测机制实际上是对应用程序主线程的要求，要求主线程必须在限定的时间内，完成对几种操作响应；否则，就可以认为应用程序主线程失去响应能力。
+  
+  Service 和 Broadcast 都是由 AMS 调度，利用 Handler 和 Looper ，设计了一个 TIMEOUT 消息交由 AMS 线程来处理， 整个超时机制的
+  实现都是在 Java 层； InputEvent 由 InputDispatcher 调度，待处理的输入时间都会进入到队列中等待，设计了一个等待超时的判断，超时机制
+  的实现在 Native 层。
+  
+  二、ANR 机制的报告
+     AMS.appNptReponding()
+     ANR 日志
+     app:当前放生 ANR 的进程
+     activity: 发生 ANR 的界面
+     parent: 发生 ANR 的界面的上一级界面
+     aboveSystem:
+     annotation: 放生 ANR 的原因
+     1. 更新 CPU 使用信息，ANR 第一次 CPU 信息采样
+     2. 填充 firstPids 和 lastPids 数组。从最近运行进程（Last Recently Used）中挑选；
+        firstPids 用于保存 ANR 进程及父进程，system_server 进程和 persistent 的进程
+        lastPids 用于保存 除 firstPids 外的其他进程
+     3. 打印调用栈
+     4. 更新 CPU 使用信息。 ANR 的第二次 CPU 使用信息采样
+     5. 显示 ANR 对话框
+     
+  除了主题逻辑外，ANR 还会输出各种类别的日志：
+    · event log : am_anr 
+    · main log : ANR in 找到对应 ANR 的信息
+    · dropbox : anr ，可以找到 ANR 信息
+    ` traces : 发生 ANR 时，各进程的函数调用栈信息
+
+三、问题分析
+  三大利器： Logcat、traces 和 StrictMode 
+  分析不出来原因，若 iowait 时间过长，有可能是因为，其他应用 anr ，可以使用 event log 结合 systemlog 查看分析具体原因。
+  
+    
+
+
 
