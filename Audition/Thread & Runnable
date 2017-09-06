@@ -1,0 +1,5 @@
+使用 Runnable 的好处：
+  1. 避免继承的局限，一个类可以继承多个接口，但是类只能继承一个类。
+  2. Runnable 接口实现的线程便于资源共享。而通过 Thread 类实现，各自线程的资源是独立的，不方便共享。
+  
+使用 Runnable 对象时，Runnable 定义的子类没有 start(), 通过 Thread 类来启动 Runnable 实现多线程。
