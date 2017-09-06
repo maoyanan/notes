@@ -1,0 +1,5 @@
+区别
+  1. ArrayList 基于动态数据的数据结构，LinkedList 基于 链表的数据结构
+  2. 对于随机访问 get 和 set ，ArrayList 绝对优于 LinkedList, 因为 LinkedList 要移动指针
+  3. 对于新增和删除操作 add 和 remove ，LinkedList 比较占优势，因为 ArrayList 要移动数据
+  
