@@ -1,0 +1,9 @@
+区别：
+  1. 两个方法来自不同的类，sleep 来自 Thread 类的静态方法， wait 来自 Object 类
+      sleep 是 Thread 的静态方法，谁调用谁睡觉，即使 a 线程调用 b 的 sleep ，实际上 a 去睡，要让 b 睡，要在 b 的代码中调用 sleep。
+  2. 锁：最主要是  sleep 方法没有释放锁，而 wait 方法释放了锁，使得其他线程可以使用同步控制块或者方法。
+      sleep 不出让系统资源；wait是进入线程等待池等待，出让系统资源，其他线程可以占用 CPU。 一般 wait 不会加时间限制，因为如果 wait 线程的运行资源
+      不够，再出来也没用，要等待其他线程调用 notify/notifyAll 唤醒等待池中的所有线程，才会进入就绪队列等待 OS 分配系统资源。 sleep(millisecond)
+      可以指定使它自动唤醒过来，如果时间不到只能调用 interrupt() 强行打断。
+      Thread.sleep(0) 的作用是 “触发操作系统立刻重新进行一次 CPU 竞争”。
+  3. 使用范围： wait ，notify 和 notifyAll 只能在同步控制方法或者同步控制块里面使用，而 sleep 可以再任何地方使用。
