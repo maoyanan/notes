@@ -1,0 +1,13 @@
+1. String str1 = "Monday"; 
+   String str2 = “Monday”;
+   程序在运行的时候，创建一个字符串缓冲池当中使用 str2 = “Monday” 这样的表达是创建字符串的时候，程序首先会在这个 String 缓冲池中寻找相同值得对象，
+   所以 str1 和 str2 指向相同
+
+2. String str1 = "Monday";
+   String str2 = new String("Monday");
+   new 操作符，告诉程序，需要一个新的！不要旧的！于是一个新的 “Monday”String 对象被创建在内存中，他们的值相同，但位置不同。浪费资源。
+3. String str1 = "Monday";
+   String str2 = new String("Monday");
+   str2 = str2.intern();
+   "abc".intern() 方法的返回值还是字符串 “abc”，表面上看起来好像这个方法没什么用处，实际上，他做了一个小动作：检查字符串池里是否存在 “abc”
+   这么个字符串，如果存在，就返回池里的字符串；如果不存在，该方法会把"abc"添加到字符串池中，然后再返回他的引用。
