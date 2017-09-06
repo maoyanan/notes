@@ -1,0 +1,4 @@
+1. 内存溢出 out of memory error ，是指在程序申请内存时，没有足够的内存空间供其使用，出现 out of memory； 
+   比如申请一个 integer，但给它内存 long 才能存下的📚，那就是内存溢出。
+2. 内存泄漏 memory leak ， 是指程序在申请内存后，无法释放已申请的内存空间，一次内存泄漏危害可以忽略，但内存泄漏堆积后果很严重，无论多少内存，迟早会被用完；
+memory leak 会最终导致 out of memory
