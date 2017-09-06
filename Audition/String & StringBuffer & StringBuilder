@@ -1,0 +1,4 @@
+1. String , 使用字符串数组保存字符串，因为有 final 修饰符，所以 String 对象不可变，线程安全。
+2. StringBuilder 与 StringBuffer 都继承自 AbstractStringBuilder，在 AbstractStringBuilder 中也是使用字符数组保存字符串，
+   所以，两种类型的对象是可变的。
+   其中  StringBuffer 是线程安全的，StringBuilder 是非线程安全的。
