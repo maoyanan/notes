@@ -1,3 +1,11 @@
-SparseArray<E> 来代替 HashMap<Integer,E>
+SparseArray<E> 来代替 HashMap<Integer,E>，主要是出于内存考虑
+
+SparseArray 是单纯数组的结合，被称为 稀疏数组，对数据保存的时候，不会有额外的开销（int[] key , Object[] value）
 
 查看键值所在位置，由于采用二分法查找键的位置，所以没有的话返回小于 0 的数值，而不是返回 -1；
+
+插入数据的比较：数据正序插入时SparseArray 效率高于 HashMap，并且占用的内存也更小，
+             数据倒序插入时，SparseArray 比 HashMap 节省内存，但是时间远大于 HashMap，因为每次插入时，都要使用 二分查找 判断是否有相同的值被插入，
+                因此这种倒序的情况是 SparseArray 效率最差的时候。
+
+Map 在插入时会对冲突因子做出相应的决策，有非常好的处理冲突的方式。不需要遍历每一个值，因此无论是倒序还是正序插入的效率取决于处理冲突的方式，因此插入时牺牲的时间基本相同。
