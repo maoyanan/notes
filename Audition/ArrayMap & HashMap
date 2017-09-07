@@ -1,0 +1,17 @@
+传统的 hashMap 对内存消耗太大
+ArrayMap 是 HashMap 的替代品，键值映射的数据结构，比传统的 HashMap 有着更好的内存管理效率。
+  官方对 ArrayMap 也有说明，它不是一个适应大数据的数据结构，相比传统的 HashMap 速度要慢，因为查找方法是 二分法，并且当删除或者添加数据时，会对控件进行重新
+  调整，在使用大量数据时，效果并不明显，低于 50%。
+
+
+1. 存储方式不同
+   HashMap 使用 HashMapEntry<K,V> 存储数据
+   ArrayMap 使用 int[] mHashes; Object[] mArray; 
+      mHashes 数组中保存的每一项 HashCode，mArray 中的就是键值对，每两个元素代表一个键值对，前面保存 key ，后面保存 value。
+      这种数据结构，避免了为每个加入到 map 的尸体构造额外的对象。
+      因为 采用 数组的实现方式，对数组进行插入和删除效率比较低，所以这种数据结构不适合大量数据项。
+2. 添加数据时扩容时的处理不一样
+   ArrayMap 用 copy 数据，所以效率高
+3. ArrayMap 提供了数组收缩功能，在 clear 或 remove 后，会重新收缩数组，是否空闲
+
+4. ArrayMap 采用二分查找法（android.support.v4.util.ContainerHelpers 中的 binarySearch 方法）
