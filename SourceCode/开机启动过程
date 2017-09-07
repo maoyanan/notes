@@ -1,0 +1,77 @@
+1. 对去 init.rc 文件配置
+  service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+    socket zygote stream 666
+    onrestart write /sys/android_power/request_state wake
+    onrestart write /sys/power/state on 
+    onrestart restart media
+    onrestart restart netd
+2. 执行源码 /system/bin/app_process/app_main.cpp
+  执行 main 函数
+  int main(int argc, const char* const argv[]){
+    ……
+    AppRuntime runtime;
+      ……
+      runtime.start("com.android.internal.os.ZygoteInit",startSystemServer)
+    ……
+  }
+3. runtime.start(string, bool)
+  AppRuntime extends AndroidRuntime;
+  start() 属于 AndroidRuntime,位于 framework/base/core/jni/AndroidRuntime.cpp
+  void AndroidRuntime::start(const char* className, const bool startSystemServer) {
+    ……
+    startClass = env->FindClass(slashClassName);
+    startMeth = env-> GetStaticMethodID(startClass, "main", "([Ljava/lang/String;V)");
+    ……
+  }
+  调用 ZygoteInit.java 的 main 方法。
+4. ZygoteInit.main()
+  public static void main() {
+    ……
+    registerZygoteSocket();
+    preload();
+    gc();
+    startSystemServer();
+    runSelectLoopMode();
+    ……
+  }
+  registerZygoteSocket 函数创建了一个 socket 接口，用来和 ActivityManagerService 通讯
+  startSystemServer 来启动 SystemServer
+  runSelectLoopMode 进入一个无限循环在前面创建的 socket 接口上等待 AMS 请求创建新的应用程序进程
+5. registerZygoteSocket
+  new LocalServerSocket();
+6. startSystemServer()
+  int pid = zygote.forkSystemServer();
+  if (0 == pid) {
+    handleSystemServerProcess();
+  }
+7. handleSystemServerProcess() {
+    closeServerSocket();
+    RuntimeInit.zygoteInit();
+  }
+8. RuntimeInit.zygoteInit() {
+    ZygoteInitNatie();
+    env->callStaticMethod(SystemSever.class,main,xxx)
+  }
+9. SystemServer.main(){
+    init1()
+    inint2() -> new ServerThread().run(){startServices .... }
+  }
+  新版本
+  static void mian() {
+    new ServerThread().run();
+  }
+  void run() {
+    Looper.perpareMainLooper();
+    startBootstrapService();
+    startCoreService();
+    startOtherService();  
+    Looper.loop();
+  }
+  
+10. runSelectLoopMode() 
+  等待 ActivityManagerService 来连接这个 Socket，然后调用 ZygoteConnection.runOnce 函数来创建新的应用程序。
+  当我们需要一个 Android 应用程序时，ActivityManagerService 会通过socket 进程间通信机制，通知 Zygote 进程为这个应用程序创建一个新的进程
+  
+参考：
+http://blog.csdn.net/luoshengyang/article/details/6768304
+  
