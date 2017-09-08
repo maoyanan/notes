@@ -1,0 +1,22 @@
+1. AMS.startProcessLock()
+2. Process.start("xxx.xxx.ActivityThread",args)
+3. Process.startViaZygote()
+4. pid = Process.zygoteSendArgsAndGetPid()
+5. Process.openZygoteSocketIfNeeded()
+6. sZygoteSocket = new LocalSocket();
+   sZygoteSocket.connect(new LocalSocketAddress(ZYGOTE_SOCKET, LocalSocketAddress.Namespace.RESERVED));
+   sZygoteInputStream = new DataInputStream(sZygoteSocket.getInputStream());
+   sZygoteWriter = new BufferWriter(new OutputStreamWriter(sZygoteSocket.getOutputStream()),256);
+7. ZygoteInit.runSelectLoopMode()
+8. ZygoteConnection.runOnce()
+9. pid = Zygote.forkAndSpecialize()
+   if (0 == pid) {
+      handleChildProc();
+   } else {
+      handleParentProc();
+   }
+10. ZygoteConnection.handleChildProc(){
+      RuntimeInit.zygoteInit();
+    }
+11. ZygoteInitNative();   -> 建立和 Bindler 通信的线程池
+    startClass.main();
