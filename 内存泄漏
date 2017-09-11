@@ -17,6 +17,7 @@
     6. 调用 native 处理的数据
       Bitmap.recycle(); cursor.close; inputstream.close()
     7. view 对象一般会持有 Activity 的引用，所以在 configChanage 的时候，（activity 需要销毁重建时），有可能会发成内存泄漏。
+    8. service完成任务之后因为停止service失败而引起的内存泄漏
       
 发现问题：
     1. StrictMode VM Poicy detectActivityLeaks() 
