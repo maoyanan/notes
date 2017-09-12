@@ -1,0 +1,15 @@
+二分法快速定位问题代码
+  Use binary serch to find the commit that introduced a bug.
+  
+  git bisect start
+  git bisect good|new
+  git bisect bas|old
+  git bisect resect
+  git bisect run sh -c "" | ''| <script>
+  git bisect log
+  git bisect skip
+  git bisect terms
+  
+----------------------------------------
+参考：
+https://git-scm.com/docs/git-bisect
