@@ -1,0 +1,36 @@
+区别：
+  1. GET 把参数包含在 URL 中，POST 通过 request body 传递参数。GET 比 POST 更不安全。
+  2. GET 在浏览器回退时是无害的，而 POST 会再次提交请求。
+  3. GET 产生的 URL 地址可以被 Bookmark，而 POST不可以。
+  4. GET 请求会被浏览器主动 cache，而 post 不会，除非手动设置（url 标记）。
+  5. GET 请求只能进行 url 编码，而 POST 支持多种编码方式（content-Type）。
+  6. GET 请求在 URL 中传送的参数被完整保留在浏览器历史记录里，而 POST 中的参数不会被保留。
+  7. GET 请求在 URL 中传送的参数有长度限制，而 POST 没有 （与浏览器有关）
+  8. 参数的数据类型不同， GET 只接受 ASCII 字符，而 POST 没有限制。
+  
+相同：
+  1. GET 和 POST 虽然参数位置不同，但是都是明文传输。
+  
+GET 和 POST 本质上没有区别。
+GET 和 POST 是 HTTP 协议的两种发送请求的方法。
+HTTP 基于 TCP/IP ，所以 GET 和 POST 的底层都是 TCP/IP ，也就是说，GET/POST 都是 TCP 链接。GET 和 POST 能做的事情都是一样的。给 GET 加上 requestbody ，
+给 POST 带上 url 参数，技术上是完全可以的。
+
+GET TCP 传输时 method = GET，要传送的数据在 url 中，
+POST TCP 传输时 method = POST，要传送的数据在 request body 中。
+GET 中可以存放 request body，POST 也可以将参数 拼接在 url，却别在于，浏览器会不会解析，get 中的 request body， post url 参数，很别扭。
+
+最重大区别：
+  GET 产生一个 TCP 数据包；
+  POST 产生 两个 TCP 数据包；
+    GET 浏览器会把 http header 和 data 一并发送出去，服务器响应 200 （返回数据）；
+    POST 浏览器先发送 header ，服务器响应 100 continue，浏览器发送 data，服务器响应 200 ok（返回数据）
+  POST 需两步，时间上消耗要多一点。
+  但是：
+    1. GET 和 POST 都有自己的语义，不能随便混用。
+    2. 据研究，网络好的情况下，发送一次包的时间和发两次包的时间差别基本可以无视。而在网络环境差的情况下，两次包的 TCP 在验证数据包完整性上，有非常大的优点。
+    3. 并不是所有浏览器都会在 POST 中发送两次包，Firfox 就只发一次。
+    
+参考链接：
+http://www.techweb.com.cn/network/system/2016-10-11/2407736.shtml
+    
