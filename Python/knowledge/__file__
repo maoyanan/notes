@@ -1,0 +1,5 @@
+用来获得脚本所在的路径，可能是一个相对路径，取决于 执行脚本时使用的路径。
+
+import os
+print __file__
+print os.path.realpath(__file__)     // 绝对路径
