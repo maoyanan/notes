@@ -1,9 +1,29 @@
-每一个 .py 文件下面都有一个 .pyc 文件
+pyc 文件：
+pyc 是一种二进制文件，是由 py 文件经过编译后，生成的文件，是一种 byte code，py 文件变成 pyc 文件后，加载的速度有所提高，而且 pyc 是一种跨
+平台的字节码，是由 python 的虚拟机来执行的，这个是类似于 JAVA 或者 .NET 虚拟机的该念。 pyc 的内容，是跟 python 版本相关的，不同版本编译后的
+pyc 文件是不同的， 2.5 编译的 pyc 文件， 2.4 版本的 python 是无法执行的。
+pyc 文件的必要性，因为 py 文件是可以直接看到源码的，如果是商业软件开发的化，不能把源码泄漏出去，
+pyc 文件可以反编译，但是不同版本编译后的 pyc 文件是不同的，根据 python 源码中提供的 opcode ，可以根据pyc 文件反编译出 py 源码。
+生成 pyc 文件：
+    import py_compile
+    py_compile.compile(r'H:\game\test.py')
+    
+    批量生成
+      import compileall
+      compileall.compile_dir(r'H:\game')
+     
+      python -m compileall /root/src/
+      
+      compile_dir(dir[, maxlevels[, ddir[, force[, rx[, quiet]]]]])
+     
+     
+      
 
-python 程序中，把原始代码放在 .py 文件里，而 Python 会在执行 .py 文件的时候。将 .py 形成的程序编译成中间式文件（byte-compiled）的 .pyc 
-文件，这么做的目的是加快下次执行文件的速度。
 
-所以在运行 python 文件时，会自动首先查看 是否具有 .pyc 文件，如果有的化，而且 .py 文件的修改时间和 .pyc 的修改时间一样，就会读取 .pyc 文件，
-否则，python 就会读原来的 .py 文件。
+pyo 文件：
+pyo 是优化编译后的程序 python -o 源文件即可将源程序编译为 pyo 文件。
 
-其实并不是所有的 .py 文件在运行时都会产生 .pyc 文件，只有 在 import 相应的 .py 文件时 ，才会生成相应的 .pyc 文件。
+pyd 文件：
+pyd 是 python 的动态链接库。
+
+
