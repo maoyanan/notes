@@ -1,0 +1,5 @@
+编码转换：
+  iconv -f 原本编码 -t 新编码 filename [-o newfile]
+  
+例如；
+  iconv -f big5 -t utf8 vi.big5 -o vi.utf8
