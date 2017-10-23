@@ -1,0 +1,37 @@
+
+10-19 16:14:31.037   518   518 I OMXMaster: makeComponentInstance(OMX.hisi.video.decoder.avc) in mediaserver process
+10-19 16:14:31.038 14198 15221 I ACodec  : In onAllocateComponent create compenent, codec name: OMX.hisi.video.decoder.avc
+10-19 16:14:31.040 14198 15220 E BufferQueueProducer: [SurfaceTexture-0-1419
+10-19 16:14:31.042  1234  1234 I TrafficMonitor: gettimer:interval=2000
+10-19 16:14:31.048   518  7079 I MediaPlayerService: MediaPlayerService::getOMX
+10-19 16:14:31.050 14198 15221 I OMXClient: MuxOMX ctor
+10-19 16:14:31.051   518  9876 I OMXMaster: makeComponentInstance(OMX.hisi.video.decoder.avc) in mediaserver process
+10-19 16:14:31.052 14198 15221 I ACodec  : In onAllocateComponent create compenent, codec name: OMX.hisi.video.decoder.avc
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: Renderer error.
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: com.google.android.exoplayer2.ExoPlaybackException
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.throwDecoderInitError(MediaCodecRenderer.java:395)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.maybeInitCodec(MediaCodecRenderer.java:382)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.onInputFormatChanged(MediaCodecRenderer.java:814)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.video.MediaCodecVideoRenderer.onInputFormatChanged(MediaCodecVideoRenderer.java:432)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.render(MediaCodecRenderer.java:513)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.ExoPlayerImplInternal.doSomeWork(ExoPlayerImplInternal.java:564)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.ExoPlayerImplInternal.handleMessage(ExoPlayerImplInternal.java:340)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at android.os.Handler.dispatchMessage(Handler.java:101)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at android.os.Looper.loop(Looper.java:156)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at android.os.HandlerThread.run(HandlerThread.java:61)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: Caused by: com.google.android.exoplayer2.mediacodec.MediaCodecRenderer$DecoderInitializationException: Decoder init failed: OMX.hisi.video.decoder.avc, Format(1/27, null, video/avc, -1, null, [848, 848, -1.0], [-1, -1])
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	... 9 more
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: Caused by: java.lang.IllegalArgumentException
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at android.media.MediaCodec.native_configure(Native Method)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at android.media.MediaCodec.configure(MediaCodec.java:1909)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.video.MediaCodecVideoRenderer.configureCodec(MediaCodecVideoRenderer.java:403)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	at com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.maybeInitCodec(MediaCodecRenderer.java:371)
+10-19 16:14:31.054 14198 15216 E ExoPlayerImplInternal: 	... 8 more
+
+-------------------------------
+TextureView 
+
+https://developer.android.com/reference/android/view/TextureView.html
+
+------------------------------
+it is important to note that only one producer can use the TextureView. For instance , if you use a TextureView to display the camera preview, you cannot us lockCanvas() to draw onto the TextureView at the same time.
