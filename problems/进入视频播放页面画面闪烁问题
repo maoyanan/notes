@@ -1,0 +1,6 @@
+考虑 TextureView 双缓存问题
+
+解决：
+  aspect = 0 时， onMeasure（） 返回 0.
+  
+  因 textureView 内部会回调， onSizeChanged（） ，返回换面的宽高
